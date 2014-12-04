@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -58,9 +59,7 @@ public class LoginActivity extends Activity {
             public void onClick(View v) {
                 new MyAsyncTask().execute(email.getText() + "", password.getText() + "");
 
-                Intent i = new Intent(getApplicationContext(),PhotoIntentActivity.class);
-                startActivity(i);
-                setContentView(R.layout.add_new_meal);
+
                 // Do something in response to button click
             }
         });
@@ -73,12 +72,12 @@ public class LoginActivity extends Activity {
 
         @Override
         protected String doInBackground(String... params) {
-            postData(params[0], params[1]);
+            responseText = postData(params[0], params[1]);
 
             return responseText;
         }
 
-        public void postData(String email_send, String password_send) {
+        public String postData(String email_send, String password_send) {
             // Create a new HttpClient and Post Header
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost("http://shielded-taiga-6664.herokuapp.com/login");
@@ -103,20 +102,50 @@ public class LoginActivity extends Activity {
                 // Execute HTTP Post Request
                 HttpResponse response = httpclient.execute(httppost);
                 String responseString = EntityUtils.toString(response.getEntity());
+                Log.d("response", responseString);
 
-                JSONObject jsonObject = new JSONObject(responseString);
-                JSONObject userObject = jsonObject.getJSONObject("user");
-                String userName = userObject.getString("username");
-                String userId = userObject.getString("_id");
-
-                SharedPreferences.Editor editor = pref.edit();
-                editor.putString("id", userId);
-                editor.commit();
+                return responseString;
 
             } catch(Exception e) {
                 e.printStackTrace();
                 Log.d("Error", "Cannot Estabilish Connection");
+                return "Cannot Estabilish Connection";
             }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            if (result.equals("Unauthorized")) {
+                Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT);
+            }
+            else {
+                Intent i = new Intent(getApplicationContext(),HomeActivity.class);
+                startActivity(i);
+                setContentView(R.layout.add_new_meal);
+
+                JSONObject jsonObject = null;
+                String userId = null;
+                String userName = null;
+                JSONObject userObject = null;
+                try {
+                    jsonObject = new JSONObject(result);
+                    userObject = jsonObject.getJSONObject("user");
+                    userName = userObject.getString("username");
+                    userId = userObject.getString("_id");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("id", userId);
+                editor.putString("username", userName);
+                editor.commit();
+
+                Toast.makeText(getApplicationContext(), "Logged in", Toast.LENGTH_SHORT);
+            }
+
         }
     }
 }

@@ -393,7 +393,7 @@ public class PhotoIntentActivity extends Activity {
 			btn.setOnClickListener(onClickListener);        	
 		} else {
 			btn.setText( 
-				getText(R.string.cannot).toString() + " " + btn.getText());
+				"cannot" + " " + btn.getText());
 			btn.setClickable(false);
 		}
 	}
