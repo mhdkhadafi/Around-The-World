@@ -39,4 +39,10 @@
         android:text="Login"
         android:id="@+id/login_user" />
 
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"
+        android:id="@+id/btn_signup" />
+
 </LinearLayout>

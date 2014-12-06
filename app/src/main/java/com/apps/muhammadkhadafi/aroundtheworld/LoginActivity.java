@@ -44,6 +44,7 @@ public class LoginActivity extends Activity {
     EditText email;
     EditText password;
     Button login_button;
+    Button btnSignUp;
 
     /** Called when the activity is first created. */
     @Override
@@ -54,15 +55,26 @@ public class LoginActivity extends Activity {
         email = (EditText) findViewById(R.id.email_login);
         password = (EditText) findViewById(R.id.password_login);
         login_button = (Button) findViewById(R.id.login_user);
+        btnSignUp = (Button) findViewById(R.id.btn_signup);
 
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),RegisterActivity.class);
+                startActivity(i);
+            }
+        });
         login_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 new MyAsyncTask().execute(email.getText() + "", password.getText() + "");
-
-
-                // Do something in response to button click
             }
         });
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPrefs", 0);
+        if (!pref.getString("id", "").equals("")) {
+            Intent i = new Intent(getApplicationContext(),HomeActivity.class);
+            startActivity(i);
+        }
     }
 
     private class MyAsyncTask extends AsyncTask<String, Void, String> {
@@ -118,12 +130,11 @@ public class LoginActivity extends Activity {
             super.onPostExecute(result);
 
             if (result.equals("Unauthorized")) {
-                Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
             }
             else {
                 Intent i = new Intent(getApplicationContext(),HomeActivity.class);
                 startActivity(i);
-                setContentView(R.layout.add_new_meal);
 
                 JSONObject jsonObject = null;
                 String userId = null;

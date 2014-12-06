@@ -107,7 +107,7 @@ public class PhotoIntentActivity extends Activity {
 	}
 
 	private File createImageFile() throws IOException {
-        EditText meal_name = (EditText) findViewById(R.id.meal_name);
+        EditText meal_name = (EditText) findViewById(R.id.txt_mealname);
 
 		// Create an image file name
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -164,7 +164,7 @@ public class PhotoIntentActivity extends Activity {
         String id = prefs.getString("id", "");
         new S3PutThumbnailTask().execute(thumb_uri);
 
-        EditText meal_name = (EditText) findViewById(R.id.meal_name);
+        EditText meal_name = (EditText) findViewById(R.id.txt_mealname);
         new MeanPostArticle().execute(meal_name.getText() + "", "https://s3.amazonaws.com/my-unique-nameakiajn46spjhkwzxslvabucketone/" + meal_name.getText(),
                 "https://s3.amazonaws.com/my-unique-nameakiajn46spjhkwzxslvabucketone/" + meal_name.getText() + "thumb", id,
                 "daffi");
@@ -221,7 +221,7 @@ public class PhotoIntentActivity extends Activity {
     }
 
     private void galleryAddPic() throws IOException {
-        EditText meal_name = (EditText) findViewById(R.id.meal_name);
+        EditText meal_name = (EditText) findViewById(R.id.txt_mealname);
 
         Intent mediaScanIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");
         File f = new File(mCurrentPhotoPath);
@@ -310,21 +310,17 @@ public class PhotoIntentActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_new_meal);
 
-		mImageView = (ImageView) findViewById(R.id.meal_photo);
+//		mImageView = (ImageView) findViewById(R.id.meal_photo);
 		mImageBitmap = null;
 
-		Button picBtn = (Button) findViewById(R.id.photo_button);
+		Button picBtn = (Button) findViewById(R.id.btn_cancel);
 		setBtnListenerOrDisable( 
 				picBtn, 
 				mTakePicOnClickListener,
 				MediaStore.ACTION_IMAGE_CAPTURE
 		);
-		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-			mAlbumStorageDirFactory = new FroyoAlbumDirFactory();
-		} else {
-			mAlbumStorageDirFactory = new BaseAlbumDirFactory();
-		}
+
+        mAlbumStorageDirFactory = new BaseAlbumDirFactory();
 	}
 
 	@Override
@@ -408,7 +404,7 @@ public class PhotoIntentActivity extends Activity {
 
 
         protected S3TaskResult doInBackground(Uri... uris) {
-            EditText meal_name = (EditText) findViewById(R.id.meal_name);
+            EditText meal_name = (EditText) findViewById(R.id.txt_mealname);
 
             if (uris == null || uris.length != 1) {
                 return null;
@@ -474,7 +470,7 @@ public class PhotoIntentActivity extends Activity {
 
 
         protected S3TaskResult doInBackground(Uri... uris) {
-            EditText meal_name = (EditText) findViewById(R.id.meal_name);
+            EditText meal_name = (EditText) findViewById(R.id.txt_mealname);
 
             if (uris == null || uris.length != 1) {
                 return null;
@@ -608,7 +604,7 @@ public class PhotoIntentActivity extends Activity {
 
         s3Client.createBucket("testbucket");
 
-        EditText meal_name = (EditText) findViewById(R.id.meal_name);
+        EditText meal_name = (EditText) findViewById(R.id.txt_mealname);
 
         PutObjectRequest por = new PutObjectRequest( getPictureBucket(), meal_name.getText() + "", new java.io.File( filePath) );
         s3Client.putObject( por );

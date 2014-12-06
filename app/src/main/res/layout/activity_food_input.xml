@@ -1,62 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="1">
+    android:layout_height="match_parent">
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Food Name:"
-        android:textSize="20dp" />
+        android:layout_height="0dp"
+        android:text="Search results for:"
+        android:textSize="20dp"
+        android:layout_weight="0.5"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/food_name_input"
-        android:textSize="20dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Search"
-        android:id="@+id/menu_search" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:text="New Text"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:id="@+id/txt_foodnamesearch"
+        android:layout_weight="0.5"/>
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/result_page" />
+        android:layout_height="0dp"
+        android:text="page x/y"
+        android:id="@+id/result_page"
+        android:layout_weight="0.5"/>
 
     <ExpandableListView
         android:layout_width="match_parent"
-        android:layout_height="148dp"
+        android:layout_height="0dp"
         android:id="@+id/expandable_food_list"
-        android:layout_weight="0.53"
-        android:transcriptMode="disabled"/>
+        android:layout_weight="5"
+        android:transcriptMode="disabled" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" >
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1">
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
             android:text="Previous Page"
-            android:id="@+id/prev_button"
+            android:id="@+id/btn_prevpage"
             android:layout_weight="0.5"/>
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
             android:text="Next Page"
-            android:id="@+id/next_button"
+            android:id="@+id/btn_nextpage"
             android:layout_weight="0.5"/>
 
 
     </LinearLayout>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:text="Select Food"
+        android:id="@+id/btn_selectfood"
+        android:layout_weight="1"/>
 
 
 </LinearLayout>

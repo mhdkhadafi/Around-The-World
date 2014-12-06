@@ -3,4 +3,60 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="Recommended food from:"
+        android:textSize="20dp"
+        android:layout_weight="0.5"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:text="New York, NY"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:id="@+id/txt_cityfood"
+        android:layout_weight="0.5"/>
+
+    <ExpandableListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/elv_foodrecommendation"
+        android:layout_weight="6"
+        android:transcriptMode="disabled" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:text="More Recommendation"
+        android:id="@+id/btn_morerec"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="Back"
+            android:id="@+id/btn_back"
+            android:layout_weight="0.5"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="Get Recipe"
+            android:id="@+id/btn_getrecipe"
+            android:layout_weight="0.5"/>
+
+
+    </LinearLayout>
+
+
 </LinearLayout>

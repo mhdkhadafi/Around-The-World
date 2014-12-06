@@ -1,6 +1,7 @@
 package com.apps.muhammadkhadafi.aroundtheworld;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ public class RegisterActivity extends Activity {
     EditText email;
     EditText password;
     Button submit_button;
+    Button btnSignIn;
 
     /** Called when the activity is first created. */
     @Override
@@ -47,14 +49,27 @@ public class RegisterActivity extends Activity {
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
         submit_button = (Button) findViewById(R.id.submit_user);
+        btnSignIn = (Button) findViewById(R.id.btn_signin);
 
+        btnSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),LoginActivity.class);
+                startActivity(i);
+            }
+        });
         submit_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 new MyAsyncTask().execute(full_name.getText() + "", user_name.getText() + "",
                         email.getText() + "", password.getText() + "");
-                // Do something in response to button click
             }
         });
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPrefs", 0);
+        if (!pref.getString("id", "").equals("")) {
+            Intent i = new Intent(getApplicationContext(),HomeActivity.class);
+            startActivity(i);
+        }
     }
 
     private class MyAsyncTask extends AsyncTask<String, Void, String> {
@@ -72,7 +87,7 @@ public class RegisterActivity extends Activity {
         public void postData(String full_name_send, String user_name_send, String email_send, String password_send) {
             // Create a new HttpClient and Post Header
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://sleepy-temple-6814.herokuapp.com/register");
+                HttpPost httppost = new HttpPost("http://shielded-taiga-6664.herokuapp.com/register");
 
             try {
                 // Add your data
@@ -88,16 +103,6 @@ public class RegisterActivity extends Activity {
                     e.printStackTrace();
                 }
 
-                //JSONArray jsonArray = new JSONArray();
-                //jsonArray.put(user);
-
-                //JSONObject user_list = new JSONObject();
-                //try {
-                //    user_list.put("user", jsonArray);
-                //} catch (JSONException e) {
-                //    e.printStackTrace();
-                //}
-
                 StringEntity se = new StringEntity(user.toString());
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 
@@ -108,23 +113,18 @@ public class RegisterActivity extends Activity {
                 ResponseHandler responseHandler = new BasicResponseHandler();
                 HttpResponse response = httpclient.execute(httppost);
 
-                //This is the response from a php application
-                //responseText = response.toString();
-                //String responseID = responseText.substring(responseText.indexOf("\"id\":") + 5,
-                //        responseText.indexOf("}"));
-
                 Log.d("response", EntityUtils.toString(response.getEntity()));
-                //Log.d("response", response.toString());
-                //IDNumber = responseID;
-
-                //SharedPreferences.Editor editor = pref.edit();
-                //editor.putString("id", IDNumber);
-                //editor.commit();
 
             } catch(Exception e) {
                 e.printStackTrace();
                 Log.d("Error", "Cannot Estabilish Connection");
             }
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
+
         }
     }
 }
