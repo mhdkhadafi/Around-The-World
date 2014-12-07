@@ -44,7 +44,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -73,6 +76,7 @@ public class MealAddActivity extends Activity {
     private Bitmap mThumbnailBitmap;
 
     private String mCurrentPhotoPath = null;
+    private String mThumbnailPhotoPath = null;
     private String mPassedPhotoPath = "";
     private String todayDate = "";
 
@@ -150,18 +154,71 @@ public class MealAddActivity extends Activity {
                 Date d = new Date(System.currentTimeMillis());
                 todayDate = sdf.format(d);
 
+                if (mCurrentPhotoPath == null) mCurrentPhotoPath = mPassedPhotoPath;
+
+                ExifInterface exif = null;
+                try {
+                    exif = new ExifInterface(mCurrentPhotoPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                int rotationInDegrees;
+
+                if (rotation == ExifInterface.ORIENTATION_ROTATE_90) { rotationInDegrees = 90; }
+                else if (rotation == ExifInterface.ORIENTATION_ROTATE_180) {  rotationInDegrees = 180; }
+                else if (rotation == ExifInterface.ORIENTATION_ROTATE_270) {  rotationInDegrees = 270; }
+                else { rotationInDegrees = 0; }
+
+                Matrix matrix = new Matrix();
+                if (rotation != 0f) {matrix.preRotate(rotationInDegrees);}
+
+
+                Bitmap originalBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                Bitmap rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0,
+                        originalBitmap.getWidth() - 1, originalBitmap.getHeight() - 1, matrix, true);
+                Bitmap thumbnailBmp = ThumbnailUtils.extractThumbnail(rotatedBitmap, 200, 200);
+
+
+                try {
+                    String path = Environment.getExternalStorageDirectory().toString();
+                    OutputStream fOut = null;
+                    File file = new File(path, "thumb_"+ System.currentTimeMillis() + ".jpg"); // the File to save to
+
+                    fOut = new FileOutputStream(file);
+
+                    Bitmap pictureBitmap = thumbnailBmp; // obtaining the Bitmap
+                    pictureBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut); // saving the Bitmap to a file compressed as a JPEG with 85% compression rate
+                    fOut.flush();
+                    fOut.close(); // do not forget to close the stream
+
+                    mThumbnailPhotoPath = file.getAbsolutePath();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 new S3PutObjectTask().execute();
+                new S3PutThumbObjectTask().execute();
 
                 SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPrefs", 0);
                 String userid = pref.getString("id", "");
                 String username = pref.getString("username", "");
 
+
+
+
                 new MeanPostArticle().execute(mMealName.getText().toString(),
                         "https://s3.amazonaws.com/around-the-world/"
-                                + "food_"
-                                + todayDate, "https://s3.amazonaws.com/around-the-world/"
-                                + mMealName.getText().toString() + "_" + todayDate + "thumb",
+                                + "food_" + todayDate, "https://s3.amazonaws.com/around-the-world/"
+                                + "food_" + todayDate + "_thumb",
                         userid, username);
+
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                Bundle b = new Bundle();
+                b.putString("submittedfood", mMealName.getText().toString()); //Your id\
+                intent.putExtras(b); //Put your id to your next Intent
+                startActivity(intent);
+                finish();
                 // TODO Save to server
             }
         });
@@ -417,10 +474,13 @@ public class MealAddActivity extends Activity {
                 mMealName.setText(result.split("--nutrition--")[0]);
                 mNutritionData = result.split("--nutrition--")[1].split("----");
                 mNutritionText.setText(nutritionString(result.split("--nutrition--")[1].split("----")));
-                try {
-                    setPic();
-                } catch (IOException e) {
-                    e.printStackTrace();
+
+                if (!mCurrentPhotoPath.equals("") && mCurrentPhotoPath != null) {
+                    try {
+                        setPic();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -520,8 +580,8 @@ public class MealAddActivity extends Activity {
 
         ProgressDialog dialog;
         AmazonS3Client s3Client = new AmazonS3Client(
-                new BasicAWSCredentials( "AKIFQ",
-                        "zlqOd46Ergt2+Nfn" ) );
+                new BasicAWSCredentials( "AKIAI4KSVFESTKFQ",
+                        "zlqOd46VMHIQbzdzwMh2AsN1cErgt2+Nfn" ) );
 
 
 
@@ -551,6 +611,60 @@ public class MealAddActivity extends Activity {
             PutObjectRequest por = null;
             por = new PutObjectRequest(
                     getPictureBucket(), "food_" + todayDate,
+                    new File(selectedImage.getPath())).withCannedAcl(CannedAccessControlList.PublicRead);
+
+
+            PutObjectResult putResult = s3Client.putObject(por);
+            ObjectListing ol = s3Client.listObjects("around-the-world");
+            Log.d("returns", ol.getObjectSummaries().toString());
+            Log.d("returns", putResult.getETag());
+
+            return result;
+        }
+
+        protected void onPostExecute(S3TaskResult result) {
+
+            if (result.getErrorMessage() != null) {
+
+            }
+        }
+    }
+
+    private class S3PutThumbObjectTask extends AsyncTask<Uri, Void, S3TaskResult> {
+
+        ProgressDialog dialog;
+        AmazonS3Client s3Client = new AmazonS3Client(
+                new BasicAWSCredentials( "AKIAI4KSN7MCTKFQ",
+                        "zlqOd46VMHIQbzdzkFAsN1cErgt2+Nfn" ) );
+
+
+
+        protected S3TaskResult doInBackground(Uri... uris) {
+            EditText meal_name = (EditText) findViewById(R.id.txt_mealname);
+
+            Uri selectedImage;
+            if (uris == null || uris.length != 1) {
+                Log.d("response", "photopath"+mThumbnailPhotoPath);
+                File f = new File(mThumbnailPhotoPath);
+                Uri contentUri = Uri.fromFile(f);
+                selectedImage = contentUri;
+            }
+            else {
+                selectedImage = uris[0];
+            }
+
+
+            S3TaskResult result = new S3TaskResult();
+
+
+            // Put the image data into S3.
+            //try {
+            s3Client.createBucket(getPictureBucket());
+
+            // Content type is determined by file extension.
+            PutObjectRequest por = null;
+            por = new PutObjectRequest(
+                    getPictureBucket(), "food_" + todayDate + "_thumb",
                     new File(selectedImage.getPath())).withCannedAcl(CannedAccessControlList.PublicRead);
 
 

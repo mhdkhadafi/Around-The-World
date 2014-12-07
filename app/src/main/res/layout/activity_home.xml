@@ -31,16 +31,18 @@
             android:gravity="left"
             android:textSize="20dp"
             android:id="@+id/txt_country"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:clickable="true"/>
 
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="right"
             android:layout_height="fill_parent"
-            android:text="230 / 1000 xp"
+            android:text="0 / 100 xp"
             android:textSize="20dp"
-            android:id="@+id/txt_currentxp" />
+            android:id="@+id/txt_currentxp"
+            android:clickable="true"/>
     </LinearLayout>
 
     <ProgressBar
@@ -49,7 +51,7 @@
         android:id="@+id/prog_countryprogression"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:max="1000"
-        android:progress="230"
+        android:progress="0"
         android:layout_weight="0.5"/>
 
     <ImageButton

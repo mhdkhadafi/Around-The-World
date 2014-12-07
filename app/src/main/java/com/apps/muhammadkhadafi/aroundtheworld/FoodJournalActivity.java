@@ -3,10 +3,15 @@ package com.apps.muhammadkhadafi.aroundtheworld;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.SimpleTimeZone;
 
 /**
  * Created by muhammadkhadafi on 12/5/14.
@@ -25,6 +30,13 @@ public class FoodJournalActivity extends Activity {
         btnBack = (Button) findViewById(R.id.btn_back);
         btnGetFood = (Button) findViewById(R.id.btn_getfood);
         final CalendarView calendarView = (CalendarView) findViewById(R.id.cal_foodcalendar);
+
+        Date d = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdfm = new SimpleDateFormat("MM");
+        SimpleDateFormat sdfd = new SimpleDateFormat("dd");
+        calDay = Integer.parseInt(sdfd.format(d));
+        calMonth = Integer.parseInt(sdfm.format(d)) - 1;
+
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
@@ -35,6 +47,8 @@ public class FoodJournalActivity extends Activity {
                 calMonth = month;
             }
         });
+
+
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override

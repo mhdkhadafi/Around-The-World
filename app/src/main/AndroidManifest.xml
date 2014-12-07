@@ -46,6 +46,9 @@
         <activity
             android:name="com.apps.muhammadkhadafi.aroundtheworld.DailyJournalActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.apps.muhammadkhadafi.aroundtheworld.CountryDetailActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

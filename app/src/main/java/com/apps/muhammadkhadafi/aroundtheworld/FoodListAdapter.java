@@ -1,8 +1,11 @@
 package com.apps.muhammadkhadafi.aroundtheworld;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.SparseArray;
@@ -10,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -97,7 +101,7 @@ public class FoodListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.listrow_details_food, null);
         }
 
-        Group group = (Group) getGroup(groupPosition);
+        final Group group = (Group) getGroup(groupPosition);
         TextView foodName = (TextView) convertView.findViewById(R.id.txt_foodname);
         foodName.setText(group.title);
         TextView dateConsumed = (TextView) convertView.findViewById(R.id.txt_dateconsumed);
@@ -105,9 +109,18 @@ public class FoodListAdapter extends BaseExpandableListAdapter {
         TextView timeConsumed = (TextView) convertView.findViewById(R.id.txt_timeconsumed);
         timeConsumed.setText(group.timeConsumed);
 
-        ImageView bmImage = (ImageView) convertView.findViewById(R.id.img_foodimage);
+        ImageButton bmImage = (ImageButton) convertView.findViewById(R.id.img_foodimagebutton);
+        bmImage.setFocusable(false);
 
         if (!group.bitmapUrl.equals("")) new DownloadImageTask(bmImage).execute(group.bitmapUrl);
+
+        bmImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(group.bitmapUrlFull));
+                activity.startActivity(browserIntent);
+            }
+        });
 
 
         return convertView;
@@ -144,7 +157,14 @@ public class FoodListAdapter extends BaseExpandableListAdapter {
         }
 
         protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
+            float scale = (float) bmImage.getHeight() / result.getHeight();
+            Matrix matrix = new Matrix();
+            matrix.postScale(scale, scale);
+            Bitmap scaledBitmap = Bitmap.createBitmap(result, 0, 0, result.getWidth(), result.getHeight(), matrix, true);
+
+
+
+            bmImage.setImageBitmap(scaledBitmap);
         }
     }
 }

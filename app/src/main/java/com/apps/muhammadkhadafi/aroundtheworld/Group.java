@@ -11,6 +11,7 @@ public class Group {
     public String title;
     public String subTitle;
     public String bitmapUrl;
+    public String bitmapUrlFull;
     public String dateConsumed;
     public String timeConsumed;
 

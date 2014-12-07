@@ -52,7 +52,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:max="2000"
-                android:progress="0"
+                android:progress="-0"
                 android:layout_height="wrap_content"
                 android:id="@+id/prog_cal" />
 
@@ -261,7 +261,7 @@
             android:textSize="30dp"
             android:textStyle="bold"
             android:gravity="center"
-            android:text="Nutrition xp:\n20 / 100"
+            android:text="Nutrition xp:\n0 / 50"
             android:id="@+id/txt_nutritionxp"
             android:layout_weight="2"/>
 

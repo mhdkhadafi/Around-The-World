@@ -51,6 +51,8 @@ public class DailyJournalActivity extends Activity {
         day = b.getInt("day");
         month = b.getInt("month");
 
+        Log.d("response", day+"-"+month);
+
         btnBack = (Button) findViewById(R.id.btn_back);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,9 +146,12 @@ public class DailyJournalActivity extends Activity {
                 String foodNutrition = "";
                 foodAttibutesArray = new String[jsonArray.length()];
 
+                Log.d("respinse", "jsonlength" + jsonArray.length());
+
                 for (int i = 0; i < jsonArray.length(); i++) {
                     String foodName = jsonArray.getJSONObject(i).getString("title");
                     String pictureUrl = jsonArray.getJSONObject(i).getString("content");
+                    String pictureUrlThumb = jsonArray.getJSONObject(i).getString("thumbnail");
                     String dateTimeSubmitted = jsonArray.getJSONObject(i).getString("created");
                     nutritions = jsonArray.getJSONObject(i).getString("nutrition");
                     JSONObject nutritionJson = new JSONObject(nutritions);
@@ -171,12 +176,13 @@ public class DailyJournalActivity extends Activity {
                     foodNutrition = foodNutrition + nutritionJson.getString("iron") + "----";
 
                     foodAttibutesArray[i] = foodName + "--att--" + pictureUrl + "--att--" +
-                            dateTimeSubmitted + "--att--" + foodNutrition;
+                            dateTimeSubmitted + "--att--" + pictureUrlThumb + "--att--" + foodNutrition;
                     foodNutrition = "";
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
+//                foodAttibutesArray = new String[0];
             }
 
             return foodAttibutesArray;
@@ -199,9 +205,11 @@ public class DailyJournalActivity extends Activity {
                 expandableFoodList.scrollBy(0, 0);
 
                 for (int j = 0; j < result.length; j++) {
+                    Log.d("response", result[j]);
                     String[] splitFoodAttributes = result[j].split("--att--");
                     Group group = new Group(splitFoodAttributes[0], "");
-                    group.bitmapUrl = splitFoodAttributes[1];
+                    group.bitmapUrlFull = splitFoodAttributes[1];
+                    group.bitmapUrl = splitFoodAttributes[3];
 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'.000Z'");
                     SimpleDateFormat sdf1 = new SimpleDateFormat("EEEE, MMMM dd yyyy");
@@ -213,7 +221,7 @@ public class DailyJournalActivity extends Activity {
                         e.printStackTrace();
                     }
 
-//                    group.children.add(nutritionString(result[3].split("----")));
+                    group.children.add(nutritionString(splitFoodAttributes[4].split("----")));
                     groups.append(j, group);
                 }
             }

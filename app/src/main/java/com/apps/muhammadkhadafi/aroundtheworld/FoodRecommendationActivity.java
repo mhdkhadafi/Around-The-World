@@ -2,6 +2,7 @@ package com.apps.muhammadkhadafi.aroundtheworld;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -110,49 +111,15 @@ public class FoodRecommendationActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (!recipeUrl.equals("")) {
-                    Intent intent = new Intent(getApplicationContext(), ActivityRecipeView.class);
-                    Bundle b = new Bundle();
-                    b.putString("currentcity", txtCityFood.getText().toString()); //Your id\
-                    b.putString("recipeUrl", recipeUrl);
-                    intent.putExtras(b); //Put your id to your next Intent
-                    startActivity(intent);
-                    finish();
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(recipeUrl));
+                    startActivity(browserIntent);
                 }
                 else Toast.makeText(getApplicationContext(), "Select food first", Toast.LENGTH_SHORT).show();
             }
         });
-//        Group group = new Group("Karelian Borscht", "Finland");
-//        group.children.add("Nutrition Karelian Borscht");
-//        group.bitmapUrl = "https://d2k9njawademcf.cloudfront.net/indeximages/30004/full/_TJH7053_1.jpg?1403272429";
-//        groups.append(0, group);
-//
-//        group = new Group("Kedgeree", "UK");
-//        group.children.add("Nutrition Kedgeree");
-//        group.bitmapUrl = "http://www.drdobbin.co.uk/sites/all/sites/drdobbin.co.uk/files/image/kedgeree.jpg";
-//        groups.append(1, group);
+
     }
 
-    private String getLocalFoodName(String locality) {
-
-        String[] localFoods = new String[5];
-        if (locality.equals("New York, USA")) {
-            localFoods = new String[]{"manhattan clam chowder", "knish", "waldorf salad",
-                    "new york strip", "eggs benedict"};
-        }
-        else if (locality.equals("London, UK")) {
-            localFoods = new String[]{"welsh rarebit", "beef wellington", "kedgeree", "kidney pie",
-                    "lancashire hotpot"};
-        }
-        else if (locality.equals("Stockholm, Sweden")) {
-            localFoods = new String[]{"salmon", "swedish meatballs", "danish meatballs",
-                    "norwegian fish", "mojakka"};
-        }
-        else {
-
-        }
-        Random random = new Random();
-        return localFoods[random.nextInt(5)];
-    }
     private class RecAsync extends AsyncTask<String, Void, String> {
 
         @Override
