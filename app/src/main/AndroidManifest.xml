@@ -26,7 +26,8 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.apps.muhammadkhadafi.aroundtheworld.MealAddActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
         <activity
             android:name="com.apps.muhammadkhadafi.aroundtheworld.SearchFoodActivity"
             android:screenOrientation="portrait"/>
@@ -41,6 +42,9 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.apps.muhammadkhadafi.aroundtheworld.RegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.apps.muhammadkhadafi.aroundtheworld.DailyJournalActivity"
             android:screenOrientation="portrait"/>
     </application>
 

@@ -13,14 +13,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Random;
@@ -34,6 +41,7 @@ public class FoodRecommendationActivity extends Activity {
     private RecListAdapter adapter;
     ExpandableListView expandableRecList;
     TextView txtCityFood;
+    private String txtFood = "";
     private int resultsPerPage = 5;
     private Button btnMoreRec;
     private Button btnGetRecipe;
@@ -83,12 +91,12 @@ public class FoodRecommendationActivity extends Activity {
 
         foodLinks = new String[resultsPerPage];
 
-        new RecAsync().execute(getLocalFoodName(txtCityFood.getText().toString()));
+        new GetFoodAsync().execute(txtCityFood.getText().toString());
 
         btnMoreRec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new RecAsync().execute(getLocalFoodName(txtCityFood.getText().toString()));
+                new GetFoodAsync().execute(txtCityFood.getText().toString());
             }
         });
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -251,6 +259,74 @@ public class FoodRecommendationActivity extends Activity {
                         groups.remove(k);
                     }
                 }
+            }
+        }
+    }
+
+    private class GetFoodAsync extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "";
+
+            try {
+                result = getFood(params[0]);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        public String getFood(String city) throws UnsupportedEncodingException {
+            // Create a new HttpClient and Post Header
+
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost("http://shielded-taiga-6664.herokuapp.com/articles/getcountryfood");
+
+            try {
+
+                JSONObject user = new JSONObject();
+                try {
+                    user.put("city", city);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                StringEntity se = new StringEntity(user.toString());
+                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+                httppost.setEntity(se);
+
+                // Execute HTTP Post Request
+                HttpResponse response = httpclient.execute(httppost);
+                String responseString = EntityUtils.toString(response.getEntity());
+                Log.d("response", responseString);
+
+                JSONObject jsonObject = new JSONObject(responseString);
+                String randomfood = jsonObject.getJSONObject("city").getString("randomfood");
+
+                return randomfood;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            // TextView resultText = (TextView) findViewById(R.id.result_text);
+
+            // show result in textView
+            if (result == "no results") {
+                // TODO : Do something to handle no results
+            } else {
+                txtFood = result;
+
+                new RecAsync().execute(txtFood);
             }
         }
     }

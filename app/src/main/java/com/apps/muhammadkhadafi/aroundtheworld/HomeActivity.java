@@ -44,7 +44,7 @@ public class HomeActivity extends Activity {
     SharedPreferences preferences;
 
     String[] cityList = new String[]{"New York, USA", "London, UK", "Stockholm, Sweden",
-            "Paris, France", "Rome, Italy", "Cairo, Egypt", "Victoria Falls",
+            "Paris, France", "Rome, Italy", "Cairo, Egypt", "Victoria Falls, Zimbabwe",
             "Tehran, Iran", "New Delhi, India", "Beijing, China", "Seoul, South Korea",
             "Tokyo, Japan", "Bangkok, Thailand", "Bali, Indonesia", "Sydney, Australia",
             "Apia, Samoa", "Buenos Aires, Argentina", "Rio de Janeiro, Brazil",
@@ -58,6 +58,7 @@ public class HomeActivity extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         preferences = getApplicationContext().getSharedPreferences("MyPrefs", 0);
+
         int currentXp = preferences.getInt("xp", 0);
 
         btnFoodRec = (Button) findViewById(R.id.btn_recommendfood);
@@ -76,6 +77,8 @@ public class HomeActivity extends Activity {
 
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("currentcity", tvCountry.getText().toString());
+        editor.putString("id", "54504c40febf73080027af93");
+        editor.putString("username", "daffi");
         editor.commit();
 
         btnFoodRec.setOnClickListener(new View.OnClickListener() {

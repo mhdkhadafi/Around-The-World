@@ -313,7 +313,7 @@ public class PhotoIntentActivity extends Activity {
 //		mImageView = (ImageView) findViewById(R.id.meal_photo);
 		mImageBitmap = null;
 
-		Button picBtn = (Button) findViewById(R.id.btn_cancel);
+		Button picBtn = (Button) findViewById(R.id.btn_back);
 		setBtnListenerOrDisable( 
 				picBtn, 
 				mTakePicOnClickListener,

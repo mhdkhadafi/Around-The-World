@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:paddingLeft="40dp"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ImageButton
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/img_foodimage"
+            android:src="@drawable/take_photo"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Food Name"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:id="@+id/txt_foodname" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Friday, November 5 2014"
+                android:textSize="15dp"
+                android:id="@+id/txt_dateconsumed" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="21:05:23"
+                android:textSize="15dp"
+                android:id="@+id/txt_timeconsumed" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -11,6 +11,8 @@ public class Group {
     public String title;
     public String subTitle;
     public String bitmapUrl;
+    public String dateConsumed;
+    public String timeConsumed;
 
     public final List<String> children = new ArrayList<String>();
 
