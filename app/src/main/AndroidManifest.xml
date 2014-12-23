@@ -1,35 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.apps.muhammadkhadafi.sleepqualitytracker" >
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    package="com.apps.muhammadkhadafi.aroundtheworld" >
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.apps.muhammadkhadafi.sleepqualitytracker.MainActivity"
-            android:label="@string/app_name" >
+            android:name="com.apps.muhammadkhadafi.aroundtheworld.HomeActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
-                <data android:scheme="sleep" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
         <activity
-            android:name=".DataDisplayActivity" >
-        </activity>
+            android:name="com.apps.muhammadkhadafi.aroundtheworld.FoodRecommendationActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.apps.muhammadkhadafi.aroundtheworld.LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.apps.muhammadkhadafi.aroundtheworld.MealAddActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
+        <activity
+            android:name="com.apps.muhammadkhadafi.aroundtheworld.SearchFoodActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.apps.muhammadkhadafi.aroundtheworld.DailyNutritionActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.apps.muhammadkhadafi.aroundtheworld.FoodJournalActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.apps.muhammadkhadafi.aroundtheworld.ActivityRecipeView"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.apps.muhammadkhadafi.aroundtheworld.RegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.apps.muhammadkhadafi.aroundtheworld.DailyJournalActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.apps.muhammadkhadafi.aroundtheworld.CountryDetailActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.apps.muhammadkhadafi.sleepqualitytracker;
+package com.apps.muhammadkhadafi.aroundtheworld;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
